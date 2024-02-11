@@ -1,4 +1,13 @@
 *.iml
+/bin/
+/build/
+/gradle
+/.gradle/
+/.settings/
+.classpath
+.project
+gradlew
+gradlew.bat
 .gradle
 /local.properties
 /.idea/caches
@@ -13,3 +22,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+ 
+ 
