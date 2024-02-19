@@ -19,11 +19,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 
+import Classes.ResponseModel;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -166,7 +169,8 @@ public class PictureAnalyzer extends AppCompatActivity {
                 }
 
                 String responseData = response.body().string();
-                Log.d("API Response", responseData);
+                Gson gson = new Gson();
+                ResponseModel responseModel = gson.fromJson(responseData, ResponseModel.class);
             }
         });
     }
