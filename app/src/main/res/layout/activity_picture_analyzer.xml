@@ -6,14 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PictureAnalyzer">
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:scaleType="centerInside"
-        android:adjustViewBounds="true" />
-
     <Button
         android:id="@+id/choosePicBtn"
         android:layout_width="wrap_content"
@@ -28,5 +20,15 @@
         android:layout_height="wrap_content"
         android:text="Get Data"
         android:layout_marginTop="8dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_Gallery_Images"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarStyle="outsideInset"
+        android:scrollbars="vertical"
+        android:layout_marginTop="8dp"/>
+
 </LinearLayout>
