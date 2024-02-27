@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 
 import Classes.RecyclerAdapter;
 import Classes.ResponseModel;
+import Classes.ResponseModelDeserializer;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -163,9 +165,15 @@ public class PictureAnalyzer extends AppCompatActivity {
                     }
 
                     String responseData = response.body().string();
-                    Gson gson = new Gson();
-                    ResponseModel responseModel = gson.fromJson(responseData, ResponseModel.class);
-                    resultList.add(responseModel);
+                    Gson gson = new GsonBuilder()
+                            .registerTypeAdapter(ResponseModel.class, new ResponseModelDeserializer())
+                            .create();
+                    try {
+                        ResponseModel responseModel = gson.fromJson(responseData, ResponseModel.class);
+                        resultList.add(responseModel);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     // Make next request recursively
                     makeSequentialRequests(uriList, index + 1);
@@ -191,7 +199,7 @@ public class PictureAnalyzer extends AppCompatActivity {
                         .addFormDataPart("api_key", "UjQQW6FjvINv3nT6El9OR8WMMrNTlrhL")
                         .addFormDataPart("api_secret", "9ptGFtbx5TOSAc0xXaMKTVZXgvM0Op5F")
                         .addFormDataPart("image_base64", base64Image)
-                        .addFormDataPart("return_attributes", "gender,age")
+                        .addFormDataPart("return_attributes", "gender,age,smiling,headpose,facequality,blur,eyestatus,emotion,beauty")
                         .build();
 
                 Request request = new Request.Builder()
