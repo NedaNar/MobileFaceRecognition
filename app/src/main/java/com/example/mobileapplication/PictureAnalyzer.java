@@ -7,7 +7,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -55,6 +57,7 @@ public class PictureAnalyzer extends AppCompatActivity {
     ArrayList<ResponseModel> resultList = new ArrayList<>();
     RecyclerAdapter adapter;
     private static final int Read_Permission = 101;
+    private static final int Network_Permission = 102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,12 @@ public class PictureAnalyzer extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(PictureAnalyzer.this, new String[]{
                     Manifest.permission.READ_EXTERNAL_STORAGE}, Read_Permission);
+        }
+
+        if(ContextCompat.checkSelfPermission(PictureAnalyzer.this, Manifest.permission.ACCESS_NETWORK_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(PictureAnalyzer.this, new String[]{
+                    Manifest.permission.ACCESS_NETWORK_STATE}, Network_Permission);
         }
 
         choosePicBtn = findViewById(R.id.choosePicBtn);
@@ -89,18 +98,67 @@ public class PictureAnalyzer extends AppCompatActivity {
         getDataBtn.setOnClickListener(getDataOnClick);
     }
 
+    // Handle the result of the permission request
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == Read_Permission) {
+            // Check if the READ_EXTERNAL_STORAGE permission is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, you can proceed with your logic
+                // (e.g., loading images from external storage)
+                // loadImages();
+            } else {
+                // Permission denied, handle accordingly (e.g., show a message, disable functionality)
+                finishAffinity();
+                System.exit(0);
+            }
+        } else if (requestCode == Network_Permission) {
+            // Check if the ACCESS_NETWORK_STATE permission is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, you can proceed with your logic
+                // (e.g., check network status)
+                // checkNetworkStatus();
+            } else {
+                // Permission denied, handle accordingly (e.g., show a message, disable functionality)
+                finishAffinity();
+                System.exit(0);
+            }
+        }
+    }
+
+    public void showToast(String message){
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
     View.OnClickListener getDataOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (uri.size()!=0) {
-                for(Uri imageUri : uri){
-                    makeSequentialRequests(uri, 0);
+                if (!isInternetAvailable()){
+                    showToast("Please turn on your internet");
                 }
-            } else {
+                else{
+                    for(Uri imageUri : uri){
+                        makeSequentialRequests(uri, 0);
+                    }
+                }
+            }
+            else {
                 Log.e("getDataOnClick", "No image selected");
             }
         }
     };
+
+    private boolean isInternetAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            return networkInfo != null && networkInfo.isConnected();
+        }
+        return false;
+    }
 
     private String getImagePath(Uri uri) {
         String path = null;
@@ -225,5 +283,10 @@ public class PictureAnalyzer extends AppCompatActivity {
             byteBuffer.write(buffer, 0, len);
         }
         return byteBuffer.toByteArray();
+    }
+
+
+    private void CalculatePoints(ResponseModel responseModel){
+
     }
 }
