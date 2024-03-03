@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import Classes.RecyclerAdapter;
 import Classes.ResponseModel;
@@ -58,6 +59,7 @@ public class PictureAnalyzer extends AppCompatActivity {
     RecyclerAdapter adapter;
     private static final int Read_Permission = 101;
     private static final int Network_Permission = 102;
+    public float[] points;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,6 +230,7 @@ public class PictureAnalyzer extends AppCompatActivity {
                             .create();
                     try {
                         ResponseModel responseModel = gson.fromJson(responseData, ResponseModel.class);
+                        points = CalculatePoints(responseModel);
                         resultList.add(responseModel);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -286,7 +289,71 @@ public class PictureAnalyzer extends AppCompatActivity {
     }
 
 
-    private void CalculatePoints(ResponseModel responseModel){
+    //Calculates points of a face
+    //Returns an array of points
+    public float[] CalculatePoints(ResponseModel responseModel){
+        int sizeArray = responseModel.faces.size();
+        float[] pointsArray = new float[sizeArray];
+        float points = 0;
+        for (int i = 0; i < sizeArray; i++)
+        {
+            ResponseModel.Attributes attributes = responseModel.faces.get(i).attributes;
+            if ((attributes.eyeStatus.leftEyeStatus.noGlassEyeOpen >
+                 attributes.eyeStatus.leftEyeStatus.noGlassEyeClose) ||
+                (attributes.eyeStatus.leftEyeStatus.normalGlassEyeOpen >
+                 attributes.eyeStatus.leftEyeStatus.normalGlassEyeClose))
+            {
+                if (attributes.eyeStatus.leftEyeStatus.noGlassEyeOpen >
+                        attributes.eyeStatus.leftEyeStatus.normalGlassEyeOpen)
+                {
+                    points += attributes.eyeStatus.leftEyeStatus.noGlassEyeOpen / 100;
+                }
+                else points += attributes.eyeStatus.leftEyeStatus.normalGlassEyeOpen / 100;
+            }
+            else
+            {
+                if(attributes.eyeStatus.leftEyeStatus.noGlassEyeClose >
+                   attributes.eyeStatus.leftEyeStatus.normalGlassEyeClose)
+                {
+                    points -= attributes.eyeStatus.leftEyeStatus.noGlassEyeClose /100;
+                }
+                else points -= attributes.eyeStatus.leftEyeStatus.normalGlassEyeClose /100;
+            }
 
+            if ((attributes.eyeStatus.rightEyeStatus.noGlassEyeOpen >
+                    attributes.eyeStatus.rightEyeStatus.noGlassEyeClose) ||
+                    (attributes.eyeStatus.rightEyeStatus.normalGlassEyeOpen >
+                            attributes.eyeStatus.rightEyeStatus.normalGlassEyeClose))
+            {
+                if (attributes.eyeStatus.rightEyeStatus.noGlassEyeOpen >
+                        attributes.eyeStatus.rightEyeStatus.normalGlassEyeOpen)
+                {
+                    points += attributes.eyeStatus.rightEyeStatus.noGlassEyeOpen / 100;
+                }
+                else points += attributes.eyeStatus.rightEyeStatus.normalGlassEyeOpen / 100;
+            }
+            else
+            {
+                if(attributes.eyeStatus.rightEyeStatus.noGlassEyeClose >
+                        attributes.eyeStatus.rightEyeStatus.normalGlassEyeClose)
+                {
+                    points -= attributes.eyeStatus.rightEyeStatus.noGlassEyeClose /100;
+                }
+                else points -= attributes.eyeStatus.rightEyeStatus.normalGlassEyeClose /100;
+            }
+
+            String gender = attributes.gender;
+            if (Objects.equals(gender, "Male"))
+            {
+                points += attributes.beauty.maleScore / 100;
+            }
+            else
+            {
+                points += attributes.beauty.femaleScore / 100;
+            }
+            points += attributes.smile / 100 - attributes.blur + attributes.faceQuality / 100;
+            pointsArray[i] = points;
+        }
+        return pointsArray;
     }
 }
