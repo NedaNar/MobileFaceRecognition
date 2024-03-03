@@ -243,6 +243,9 @@ public class PictureAnalyzer extends AppCompatActivity {
         } else {
             // All requests completed
             // Do something with resultList
+            Intent intent = new Intent(PictureAnalyzer.this, DisplayData.class);
+            intent.putParcelableArrayListExtra("imageUris", uri);
+            startActivity(intent);
         }
     }
 
