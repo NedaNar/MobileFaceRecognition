@@ -18,12 +18,16 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -36,8 +40,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import Classes.ImageModel;
 import Classes.RecyclerAdapter;
 import Classes.ResponseModel;
 import Classes.ResponseModelDeserializer;
@@ -56,10 +62,14 @@ public class PictureAnalyzer extends AppCompatActivity {
     Button getDataBtn;
     ArrayList<Uri> uri = new ArrayList<>();
     ArrayList<ResponseModel> resultList = new ArrayList<>();
+    ArrayList<ImageModel> analyzedImages = new ArrayList<>();
     RecyclerAdapter adapter;
     private static final int Read_Permission = 101;
     private static final int Network_Permission = 102;
     public float[] points;
+    private Spinner photoTypeSpinner;
+    private String mode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +91,35 @@ public class PictureAnalyzer extends AppCompatActivity {
             ActivityCompat.requestPermissions(PictureAnalyzer.this, new String[]{
                     Manifest.permission.ACCESS_NETWORK_STATE}, Network_Permission);
         }
+
+        photoTypeSpinner = findViewById(R.id.photo_type_spinner);
+        photoTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String selectedPhotoType = parentView.getItemAtPosition(position).toString();
+                mode = selectedPhotoType;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                mode = "General best photo";
+            }
+        });
+
+        // Create a list of items for the Spinner
+        List<String> photoTypes = new ArrayList<>();
+        photoTypes.add("General best photo");
+        photoTypes.add("Best group photo");
+        photoTypes.add("Best document photo");
+
+        // Create an ArrayAdapter using the list of photo types
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, photoTypes);
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        photoTypeSpinner.setAdapter(adapter);
 
         choosePicBtn = findViewById(R.id.choosePicBtn);
         choosePicBtn.setOnClickListener(new View.OnClickListener() {
@@ -230,8 +269,10 @@ public class PictureAnalyzer extends AppCompatActivity {
                             .create();
                     try {
                         ResponseModel responseModel = gson.fromJson(responseData, ResponseModel.class);
-                        points = CalculatePoints(responseModel);
                         resultList.add(responseModel);
+
+                        points = CalculatePoints(responseModel);
+                        analyzedImages.add(new ImageModel(uriList.get(index), points[0]));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -242,9 +283,9 @@ public class PictureAnalyzer extends AppCompatActivity {
             });
         } else {
             // All requests completed
-            // Do something with resultList
             Intent intent = new Intent(PictureAnalyzer.this, DisplayData.class);
-            intent.putParcelableArrayListExtra("imageUris", uri);
+            intent.putExtra("mode", mode); // Add mode as an extra
+            intent.putParcelableArrayListExtra("images", (ArrayList<? extends Parcelable>) analyzedImages);
             startActivity(intent);
         }
     }
@@ -354,7 +395,7 @@ public class PictureAnalyzer extends AppCompatActivity {
             {
                 points += attributes.beauty.femaleScore / 100;
             }
-            points += attributes.smile / 100 - attributes.blur + attributes.faceQuality / 100;
+            points += attributes.smile / 100 - attributes.blur / 100 + attributes.faceQuality / 100;
             pointsArray[i] = points;
         }
         return pointsArray;
