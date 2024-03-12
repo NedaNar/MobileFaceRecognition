@@ -31,7 +31,13 @@ public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterLis
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapterList.ViewHolder holder, int position) {
         holder.imageView.setImageURI(images.get(position).ImageUri);
-        holder.textView.setText("Points: " + Math.round(images.get(position).Points * 10.0) / 10.0 + "/5");
+
+        String message = images.get(position).Message;
+
+        if (message.isEmpty())
+            holder.textView.setText("Points: " + Math.round(images.get(position).Points * 10.0) / 10.0 + "/5");
+        else
+            holder.textView.setText(images.get(position).Message);
     }
 
     @Override

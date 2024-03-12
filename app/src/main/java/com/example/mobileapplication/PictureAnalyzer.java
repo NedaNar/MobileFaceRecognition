@@ -26,7 +26,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -36,7 +35,6 @@ import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -49,7 +47,6 @@ import Classes.ResponseModel;
 import Classes.ResponseModelDeserializer;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -272,7 +269,13 @@ public class PictureAnalyzer extends AppCompatActivity {
                         resultList.add(responseModel);
 
                         points = CalculatePoints(responseModel);
-                        analyzedImages.add(new ImageModel(uriList.get(index), points[0]));
+
+                        if (points == null)
+                            analyzedImages.add(new ImageModel(uriList.get(index), -1, "No faces detected"));
+                        else if (points.length > 1)
+                            analyzedImages.add(new ImageModel(uriList.get(index), points[0], "Select \"Group Photo\" to analyze"));
+                        else
+                            analyzedImages.add(new ImageModel(uriList.get(index), points[0], ""));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -337,6 +340,10 @@ public class PictureAnalyzer extends AppCompatActivity {
     //Returns an array of points
     public float[] CalculatePoints(ResponseModel responseModel){
         int sizeArray = responseModel.faces.size();
+
+        if (sizeArray == 0)
+            return null;
+
         float[] pointsArray = new float[sizeArray];
         float points = 0;
         for (int i = 0; i < sizeArray; i++)

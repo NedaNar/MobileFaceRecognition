@@ -8,17 +8,20 @@ import androidx.annotation.NonNull;
 
 public class ImageModel implements Parcelable {
 
-    public ImageModel(Uri imageUri, float points) {
+    public ImageModel(Uri imageUri, float points, String message) {
         ImageUri = imageUri;
         Points = points;
+        Message = message;
     }
-    public Uri ImageUri;
 
+    public Uri ImageUri;
     public float Points;
+    public String Message;
 
     protected ImageModel(Parcel in) {
         ImageUri = in.readParcelable(Uri.class.getClassLoader());
         Points = in.readFloat();
+        Message = in.readString();
     }
 
     public static final Creator<ImageModel> CREATOR = new Creator<ImageModel>() {
@@ -42,5 +45,6 @@ public class ImageModel implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeParcelable(ImageUri, flags);
         dest.writeFloat(Points);
+        dest.writeString(Message);
     }
 }
