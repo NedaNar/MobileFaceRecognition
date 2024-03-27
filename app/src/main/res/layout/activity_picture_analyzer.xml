@@ -6,42 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".PictureAnalyzer">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <!-- Title on the left -->
-            <TextView
-                android:id="@+id/app_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="BumBum"
-                android:textColor="#ffffff"
-                android:textSize="18sp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="16dp"/>
-
-            <!-- Menu items on the right -->
-            <Spinner
-                android:id="@+id/photo_type_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="16dp"/>
-
-        </RelativeLayout>
-    </androidx.appcompat.widget.Toolbar>
+    <include layout="@layout/toolbar_layout" />
 
     <LinearLayout
         android:layout_below="@id/toolbar"
@@ -49,31 +14,95 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/choosePicBtn"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Choose picture"
-            android:layout_marginTop="8dp"
-            android:layout_gravity="center"/>
+            android:layout_marginTop="24dp"
+            android:layout_gravity="center_horizontal">
+            <TextView
+                android:id="@+id/mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MODE:"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:textColor="#4F55CF"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"/>
 
-        <Button
-            android:id="@+id/getDataBtn"
+            <Spinner
+                android:id="@+id/photo_type_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textColor="#000000"
+                android:textSize="14dp"/>
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/choosePicBtn"
+            android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Get Data"
-            android:layout_marginTop="8dp"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:layout_marginTop="24dp"
+            android:text="CHOOSE PHOTOS"
+            android:paddingTop="12dp"
+            android:paddingStart="16dp"
+            android:textStyle="bold"
+            android:textSize="14dp"
+            android:textColor="#F2F3FF"
+            android:paddingEnd="16dp"
+            android:paddingBottom="12dp"
+            android:background="@drawable/secondary_button"/>
+
+        <TextView
+            android:id="@+id/selected_photos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SELECTED PHOTOS"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:textColor="#20212A"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="24dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_Gallery_Images"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:scrollbarStyle="outsideInset"
             android:scrollbars="vertical"
-            android:layout_marginTop="8dp"/>
-
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_gravity="center_horizontal"/>
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/background_gradient_small"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true">
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/getDataBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GET DATA"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:textStyle="bold"
+            android:textSize="14dp"
+            android:textColor="#F2F3FF"
+            android:paddingStart="16dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="12dp"
+            android:background="@drawable/primary_button"
+            android:layout_gravity="center_horizontal"/>
+    </LinearLayout>
 </RelativeLayout>

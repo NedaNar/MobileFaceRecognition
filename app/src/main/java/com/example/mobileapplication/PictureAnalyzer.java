@@ -26,7 +26,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -57,6 +59,8 @@ public class PictureAnalyzer extends AppCompatActivity {
     RecyclerView recyclerView;
     Button choosePicBtn;
     Button getDataBtn;
+    LinearLayout bottomLayout;
+    TextView selectedPhotosTextView;
     ArrayList<Uri> uri = new ArrayList<>();
     ArrayList<ResponseModel> resultList = new ArrayList<>();
     ArrayList<ImageModel> analyzedImages = new ArrayList<>();
@@ -73,9 +77,11 @@ public class PictureAnalyzer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_analyzer);
 
+        uri = getIntent().getParcelableArrayListExtra("uris");
+
         recyclerView = findViewById(R.id.recyclerView_Gallery_Images);
         adapter = new RecyclerAdapter(uri);
-        recyclerView.setLayoutManager(new GridLayoutManager(PictureAnalyzer.this, 4));
+        recyclerView.setLayoutManager(new GridLayoutManager(PictureAnalyzer.this, 3));
         recyclerView.setAdapter(adapter);
         if(ContextCompat.checkSelfPermission(PictureAnalyzer.this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -99,13 +105,13 @@ public class PictureAnalyzer extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                mode = "General best photo";
+                mode = "Best photo";
             }
         });
 
         // Create a list of items for the Spinner
         List<String> photoTypes = new ArrayList<>();
-        photoTypes.add("General best photo");
+        photoTypes.add("Best photo");
         photoTypes.add("Best group photo");
         photoTypes.add("Best document photo");
 
@@ -134,6 +140,14 @@ public class PictureAnalyzer extends AppCompatActivity {
 
         getDataBtn = findViewById(R.id.getDataBtn);
         getDataBtn.setOnClickListener(getDataOnClick);
+
+        bottomLayout = findViewById(R.id.bottomLayout);
+        selectedPhotosTextView = findViewById(R.id.selected_photos);
+
+        if (uri.isEmpty()) {
+            bottomLayout.setVisibility(View.GONE);
+            selectedPhotosTextView.setVisibility(View.GONE);
+        }
     }
 
     // Handle the result of the permission request
@@ -226,9 +240,7 @@ public class PictureAnalyzer extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        getDataBtn.setVisibility(View.VISIBLE);
-        choosePicBtn.setVisibility(View.GONE);
-
+        uri.clear();
         if (requestCode == 1 && resultCode == Activity.RESULT_OK){
             if(data.getClipData() != null) {
                 int x = data.getClipData().getItemCount();
@@ -242,6 +254,14 @@ public class PictureAnalyzer extends AppCompatActivity {
                 uri.add(imageUrl);
                 adapter.notifyDataSetChanged();
             }
+        }
+
+        if (uri.isEmpty()) {
+            bottomLayout.setVisibility(View.GONE);
+            selectedPhotosTextView.setVisibility(View.GONE);
+        } else {
+            bottomLayout.setVisibility(View.VISIBLE);
+            selectedPhotosTextView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -271,11 +291,13 @@ public class PictureAnalyzer extends AppCompatActivity {
                         points = CalculatePoints(responseModel);
 
                         if (points == null)
-                            analyzedImages.add(new ImageModel(uriList.get(index), -1, "No faces detected"));
+                            analyzedImages.add(new ImageModel(uriList.get(index), -1, "No faces detected","", 0));
                         else if (points.length > 1)
-                            analyzedImages.add(new ImageModel(uriList.get(index), points[0], "Select \"Group Photo\" to analyze"));
+                            analyzedImages.add(new ImageModel(uriList.get(index), 0, "Select \"Group Photo\" to analyze", "", 0));
                         else
-                            analyzedImages.add(new ImageModel(uriList.get(index), points[0], ""));
+                            analyzedImages.add(new ImageModel(uriList.get(index), points[0], "",
+                                    responseModel.faces.get(0).attributes.gender.toString(),
+                                    responseModel.faces.get(0).attributes.age));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

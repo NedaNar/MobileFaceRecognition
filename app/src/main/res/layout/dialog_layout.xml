@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="@drawable/background_dialog">
+
+    <ImageView
+        android:id="@+id/closeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/close_button"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"/>
+
+    <ImageView
+        android:layout_marginTop="16dp"
+        android:id="@+id/dialogImage"
+        android:layout_below="@id/closeButton"
+        android:layout_centerHorizontal="true"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/dialogText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialogImage"
+        android:layout_centerHorizontal="true"
+        android:text="Your text here"
+        android:textColor="#000"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp" />
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/dialogText"
+        android:background="@drawable/separator"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"/>
+
+    <TextView
+        android:id="@+id/dialogGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/separator"
+        android:text="First Additional Text"
+        android:textColor="#000"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/dialogAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialogGender"
+        android:text="Second Additional Text"
+        android:textColor="#000"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp" />
+
+</RelativeLayout>
