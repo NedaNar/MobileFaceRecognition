@@ -46,6 +46,9 @@ import okhttp3.Callback;
 import okhttp3.Response;
 import Classes.ChoosePhotoButton;
 import Classes.PointCalculator;
+import Classes.Mode;
+import Classes.DocumentPhoto;
+import Classes.BestPhoto;
 
 public class PictureAnalyzer extends AppCompatActivity {
     RecyclerView recyclerView;
