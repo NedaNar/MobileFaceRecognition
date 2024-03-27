@@ -2,24 +2,18 @@ package com.example.mobileapplication;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Picture;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import Classes.ImageModel;
-import Classes.RecyclerAdapter;
 import Classes.RecyclerAdapterList;
 import Classes.RecyclerViewItemDecoration;
 

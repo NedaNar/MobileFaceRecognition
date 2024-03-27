@@ -17,10 +17,12 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
+import Classes.ChoosePhotoButton;
+import Classes.SpinnerHandler;
+
 public class MainActivity extends AppCompatActivity {
     Button choosePicBtn;
-    public Spinner photoTypeSpinner;
-    public String mode;
+    SpinnerHandler spinnerHandler;
     ArrayList<Uri> uri = new ArrayList<>();
 
     @Override
@@ -29,43 +31,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         choosePicBtn = findViewById(R.id.choosePicBtn);
-        choosePicBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){
-                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                }
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select picture"), 1);
-            }
-        });
+        ChoosePhotoButton choosePhotoButton = new ChoosePhotoButton(this, choosePicBtn, uri);
+        choosePhotoButton.setBackgroundResource(R.drawable.primary_button);
 
-        photoTypeSpinner = findViewById(R.id.photo_type_spinner);
-        photoTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                mode = parentView.getItemAtPosition(position).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                mode = "Best photo";
-            }
-        });
-
-        List<String> photoTypes = new ArrayList<>();
-        photoTypes.add("Best photo");
-        photoTypes.add("Best group photo");
-        photoTypes.add("Best document photo");
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, photoTypes);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        photoTypeSpinner.setAdapter(adapter);
+        Spinner photoTypeSpinner = findViewById(R.id.photo_type_spinner);
+        spinnerHandler = new SpinnerHandler(this, photoTypeSpinner);
     }
 
-    // Handle activity result for image selection
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

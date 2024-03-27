@@ -16,7 +16,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
@@ -47,6 +46,7 @@ import Classes.ImageModel;
 import Classes.RecyclerAdapter;
 import Classes.ResponseModel;
 import Classes.ResponseModelDeserializer;
+import Classes.SpinnerHandler;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MultipartBody;
@@ -54,6 +54,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import Classes.ChoosePhotoButton;
 
 public class PictureAnalyzer extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -68,8 +69,7 @@ public class PictureAnalyzer extends AppCompatActivity {
     private static final int Read_Permission = 101;
     private static final int Network_Permission = 102;
     public float[] points;
-    private Spinner photoTypeSpinner;
-    private String mode;
+    SpinnerHandler spinnerHandler;
 
 
     @Override
@@ -95,48 +95,12 @@ public class PictureAnalyzer extends AppCompatActivity {
                     Manifest.permission.ACCESS_NETWORK_STATE}, Network_Permission);
         }
 
-        photoTypeSpinner = findViewById(R.id.photo_type_spinner);
-        photoTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String selectedPhotoType = parentView.getItemAtPosition(position).toString();
-                mode = selectedPhotoType;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                mode = "Best photo";
-            }
-        });
-
-        // Create a list of items for the Spinner
-        List<String> photoTypes = new ArrayList<>();
-        photoTypes.add("Best photo");
-        photoTypes.add("Best group photo");
-        photoTypes.add("Best document photo");
-
-        // Create an ArrayAdapter using the list of photo types
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, photoTypes);
-
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Apply the adapter to the spinner
-        photoTypeSpinner.setAdapter(adapter);
+        Spinner photoTypeSpinner = findViewById(R.id.photo_type_spinner);
+        spinnerHandler = new SpinnerHandler(this, photoTypeSpinner);
 
         choosePicBtn = findViewById(R.id.choosePicBtn);
-        choosePicBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){
-                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                }
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select picture"), 1);
-            }
-        });
+        ChoosePhotoButton choosePhotoButton = new ChoosePhotoButton(this, choosePicBtn, uri);
+        choosePhotoButton.setBackgroundResource(R.drawable.secondary_button);
 
         getDataBtn = findViewById(R.id.getDataBtn);
         getDataBtn.setOnClickListener(getDataOnClick);
@@ -309,7 +273,7 @@ public class PictureAnalyzer extends AppCompatActivity {
         } else {
             // All requests completed
             Intent intent = new Intent(PictureAnalyzer.this, DisplayData.class);
-            intent.putExtra("mode", mode); // Add mode as an extra
+            intent.putExtra("mode", spinnerHandler.getMode());
             intent.putParcelableArrayListExtra("images", (ArrayList<? extends Parcelable>) analyzedImages);
             startActivity(intent);
         }
