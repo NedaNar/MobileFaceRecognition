@@ -19,7 +19,7 @@ public class ChoosePhotoButton {
     private Activity activity;
     private Button choosePicBtn;
     private ArrayList<Uri> uriList;
-    private static final int READ_PERMISSION_REQUEST_CODE = 101;
+    public static final int READ_PERMISSION_REQUEST_CODE = 101;
 
     public ChoosePhotoButton(Activity activity, Button choosePicBtn, ArrayList<Uri> uriList) {
         this.activity = activity;
@@ -47,7 +47,7 @@ public class ChoosePhotoButton {
         });
     }
 
-    private void openGallery() {
+    public void openGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {

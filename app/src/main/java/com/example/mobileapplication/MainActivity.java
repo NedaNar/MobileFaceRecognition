@@ -1,27 +1,26 @@
 package com.example.mobileapplication;
 
+import static Classes.ChoosePhotoButton.READ_PERMISSION_REQUEST_CODE;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import Classes.ChoosePhotoButton;
 import Classes.SpinnerHandler;
 
 public class MainActivity extends AppCompatActivity {
-    Button choosePicBtn;
+    ChoosePhotoButton choosePhotoButton;
     SpinnerHandler spinnerHandler;
     ArrayList<Uri> uri = new ArrayList<>();
 
@@ -30,12 +29,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        choosePicBtn = findViewById(R.id.choosePicBtn);
-        ChoosePhotoButton choosePhotoButton = new ChoosePhotoButton(this, choosePicBtn, uri);
+        Button choosePicBtn = findViewById(R.id.choosePicBtn);
+        choosePhotoButton = new ChoosePhotoButton(this, choosePicBtn, uri);
         choosePhotoButton.setBackgroundResource(R.drawable.primary_button);
 
         Spinner photoTypeSpinner = findViewById(R.id.photo_type_spinner);
         spinnerHandler = new SpinnerHandler(this, photoTypeSpinner);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == READ_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                choosePhotoButton.openGallery();
+            } else {
+            }
+        }
     }
 
     @Override
