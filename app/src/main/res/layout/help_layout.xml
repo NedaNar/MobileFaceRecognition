@@ -1,0 +1,47 @@
+<!-- Your dialog layout XML file -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="500dp"
+android:padding="16dp"
+android:background="@drawable/background_help"> <!-- Set dialog_background.xml as the background -->
+
+    <!-- Close Button -->
+<ImageView
+    android:id="@+id/closeButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/close_button"
+    android:layout_alignParentEnd="true"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/helpTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Help"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Scrollable Text content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/closeButton"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus justo neque, sollicitudin et purus pulvinar, congue imperdiet urna. Suspendisse interdum iaculis felis in consequat. Phasellus posuere felis dui, nec placerat quam efficitur nec. Suspendisse ultrices auctor sapien nec fermentum. Suspendisse sollicitudin urna orci, ultricies maximus orci elementum a. Vivamus semper imperdiet venenatis. Sed eu purus eu ipsum venenatis malesuada. Aenean lacus felis, convallis et odio quis, finibus sodales velit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus justo neque, sollicitudin et purus pulvinar, congue imperdiet urna. Suspendisse interdum iaculis felis in consequat. Phasellus posuere felis dui, nec placerat quam efficitur nec. Suspendisse ultrices auctor sapien nec fermentum. Suspendisse sollicitudin urna orci, ultricies maximus orci elementum a. Vivamus semper imperdiet venenatis. Sed eu purus eu ipsum venenatis malesuada. Aenean lacus felis, convallis et odio quis, finibus sodales velit."
+            android:textColor="#000"
+            android:textSize="16sp"
+            android:padding="16dp"/>
+
+    </ScrollView>
+
+</RelativeLayout>
+

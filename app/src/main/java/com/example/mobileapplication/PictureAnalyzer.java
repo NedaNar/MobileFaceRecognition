@@ -10,6 +10,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.Manifest;
@@ -22,6 +24,7 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -49,7 +52,9 @@ import Classes.PointCalculator;
 import Classes.Mode;
 import Classes.DocumentPhoto;
 import Classes.BestPhoto;
-
+import android.app.Dialog;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 public class PictureAnalyzer extends AppCompatActivity {
     RecyclerView recyclerView;
     ChoosePhotoButton choosePhotoButton;
@@ -63,7 +68,6 @@ public class PictureAnalyzer extends AppCompatActivity {
     private static final int Network_Permission = 102;
     public float[] points;
     SpinnerHandler spinnerHandler;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,12 +94,45 @@ public class PictureAnalyzer extends AppCompatActivity {
         bottomLayout = findViewById(R.id.bottomLayout);
         selectedPhotosTextView = findViewById(R.id.selected_photos);
 
+
+        // Find HelpBtn and set OnClickListener
+        ImageButton helpBtn = findViewById(R.id.helpBtn);
+        helpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show help dialog
+                showHelpDialog();
+            }
+        });
         if (uri.isEmpty()) {
             bottomLayout.setVisibility(View.GONE);
             selectedPhotosTextView.setVisibility(View.GONE);
         }
 
         CheckPermissions();
+    }
+
+    private void showHelpDialog() {
+
+        // Create dialog
+        final Dialog helpDialog = new Dialog(this);
+        helpDialog.setContentView(R.layout.help_layout);
+        helpDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        helpDialog.setCancelable(true);
+
+        // Find "Close" button in dialog layout
+        ImageView btnClose = helpDialog.findViewById(R.id.closeButton);
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Close the dialog
+                helpDialog.dismiss();
+            }
+        });
+
+        // Show dialog
+        helpDialog.show();
     }
 
     public void showToast(String message){
