@@ -10,9 +10,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -74,6 +74,8 @@ public class PictureAnalyzer extends AppCompatActivity {
     SpinnerHandler spinnerHandler;
 
     public Mode calculationMode;
+    ProgressDialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,6 +214,8 @@ public class PictureAnalyzer extends AppCompatActivity {
                     for(Uri imageUri : uri){
                         resultList.clear();
                         analyzedImages.clear();
+
+                        progressDialog = ProgressDialog.show(PictureAnalyzer.this, "Loading", "Analyzing your images...", true);
                         makeSequentialRequests(uri, 0);
                     }
                 }
@@ -297,6 +301,7 @@ public class PictureAnalyzer extends AppCompatActivity {
             });
         } else {
             // All requests completed
+            progressDialog.dismiss(); // Hide loading dialog
             Intent intent = new Intent(PictureAnalyzer.this, DisplayData.class);
             intent.putExtra("mode", spinnerHandler.getMode());
             intent.putParcelableArrayListExtra("images", (ArrayList<? extends Parcelable>) analyzedImages);
