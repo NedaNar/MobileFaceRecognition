@@ -120,7 +120,7 @@ public class PictureAnalyzer extends AppCompatActivity {
 
     private void showHelpDialog() {
 
-        // Create dialog
+/*        // Create dialog
         final Dialog helpDialog = new Dialog(this);
         helpDialog.setContentView(R.layout.help_layout);
         helpDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -138,7 +138,7 @@ public class PictureAnalyzer extends AppCompatActivity {
         });
 
         // Show dialog
-        helpDialog.show();
+        helpDialog.show();*/
     }
 
     public void showToast(String message){

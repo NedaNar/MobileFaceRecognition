@@ -1,6 +1,8 @@
 package Classes;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
@@ -23,8 +25,7 @@ public class ApiManager {
         try {
             InputStream inputStream = context.getContentResolver().openInputStream(imageUri);
             if (inputStream != null) {
-                byte[] imageBytes = readBytes(inputStream);
-                String base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+                String base64Image = rescaleImage(inputStream);
 
                 RequestBody requestBody = new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
@@ -57,5 +58,42 @@ public class ApiManager {
             byteBuffer.write(buffer, 0, len);
         }
         return byteBuffer.toByteArray();
+    }
+
+    public static String rescaleImage(InputStream inputStream) {
+        try {
+            // Decode input stream into Bitmap
+            Bitmap originalBitmap = BitmapFactory.decodeStream(inputStream);
+
+            // Log the size of the original Bitmap
+            int originalSize = originalBitmap.getByteCount();
+            Log.d("ImageRescaler", "Original image size: " + originalSize + " bytes");
+
+            // Calculate desired dimensions to fit within 2MB
+            int maxWidth = originalBitmap.getWidth();
+            int maxHeight = originalBitmap.getHeight();
+            int maxSizeInBytes =  2 * 1024 * 1024; // 2MB
+            float scale = (float) Math.sqrt((double) maxSizeInBytes / originalSize);
+            int newWidth = Math.round(maxWidth * scale);
+            int newHeight = Math.round(maxHeight * scale);
+
+            // Scale the Bitmap
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true);
+
+            // Log the size of the rescaled Bitmap
+            int rescaledSize = scaledBitmap.getByteCount();
+            Log.d("ImageRescaler", "Rescaled image size: " + rescaledSize + " bytes");
+
+            // Compress the Bitmap to byte array
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream); // Adjust quality as needed
+
+            // Convert compressed byte array to Base64 string
+            byte[] compressedByteArray = outputStream.toByteArray();
+            return Base64.encodeToString(compressedByteArray, Base64.DEFAULT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
