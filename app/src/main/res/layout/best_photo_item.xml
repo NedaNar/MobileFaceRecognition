@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
-    android:background="@null"
+    android:background="@drawable/list_item_background"
     android:padding="8dp">
 
     <ImageView
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textSize="16dp"
-            style="@style/TitleSecondary"
+            android:textColor="#20212A"
             android:layout_marginBottom="8dp"/>
 
         <TextView
@@ -34,24 +34,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            style="@style/TitleSecondary"
-            android:textSize="14dp"/>
+            android:textSize="14dp"
+            android:textColor="#20212A"/>
 
         <TextView
             android:id="@+id/textAge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            style="@style/TitleSecondary"
-            android:textSize="14dp"/>
+            android:textSize="14dp"
+            android:textColor="#20212A"/>
 
         <TextView
             android:id="@+id/textMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            style="@style/TitleSecondary"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:textColor="#20212A"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/moreButton"
@@ -60,8 +60,8 @@
             android:text="More information"
             android:textSize="14dp"
             android:textStyle="bold"
-            style="@style/TitlePrimary"
             android:layout_marginTop="8dp"
+            android:textColor="#4F55CF"
             android:background="@null" />
     </LinearLayout>
 </LinearLayout>

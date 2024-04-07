@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/ScreenBackground"
     tools:context=".PictureAnalyzer">
 
     <include layout="@layout/toolbar_layout" />
@@ -26,7 +27,7 @@
             android:text="SELECTED PHOTOS"
             android:textStyle="bold"
             android:textSize="16dp"
-            android:textColor="#20212A"
+            style="@style/TitleSecondary"
             android:layout_centerVertical="true"
             android:layout_marginTop="32dp"
             android:layout_marginStart="24dp"/>

@@ -60,17 +60,16 @@ public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterLis
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.result_list_item, parent, false);
 
-        LinearLayout parentLayout = view.findViewById(R.id.itemLayout);
         if (recyclerViewId == "recyclerViewBestImage"){
-            parentLayout.setBackgroundResource(R.drawable.list_item_background);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.best_photo_item, parent, false);
         } else {
-            parentLayout.setBackground(null);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.result_list_item, parent, false);
         }
 
         Button moreButton = (Button) view.findViewById(R.id.moreButton);
         moreButton.setPaintFlags(moreButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
         return new ViewHolder(view);
     }
 

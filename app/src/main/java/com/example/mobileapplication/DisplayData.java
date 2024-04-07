@@ -1,15 +1,12 @@
 package com.example.mobileapplication;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +17,7 @@ import java.util.ArrayList;
 import Classes.ImageModel;
 import Classes.RecyclerAdapterList;
 import Classes.RecyclerViewItemDecoration;
+import Classes.ThemeHelper;
 
 public class DisplayData extends AppCompatActivity {
 
@@ -36,6 +34,7 @@ public class DisplayData extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_data);
+        ThemeHelper.setThemeColor(findViewById(R.id.colorBtn), getSharedPreferences("MODE", Context.MODE_PRIVATE));
 
         //  Retrieve image URIs from intent
         images = getIntent().<ImageModel>getParcelableArrayListExtra("images");
@@ -67,38 +66,5 @@ public class DisplayData extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        // Find HelpBtn and set OnClickListener
-        ImageButton helpBtn = findViewById(R.id.helpBtn);
-        helpBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Show help dialog
-                showHelpDialog();
-            }
-        });
-    }
-
-    private void showHelpDialog() {
-
-        // Create dialog
-        final Dialog helpDialog = new Dialog(this);
-        helpDialog.setContentView(R.layout.help_layout);
-        helpDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        helpDialog.setCancelable(true);
-
-        // Find "Close" button in dialog layout
-        ImageView btnClose = helpDialog.findViewById(R.id.closeButton);
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Close the dialog
-                helpDialog.dismiss();
-            }
-        });
-
-        // Show dialog
-        helpDialog.show();
     }
 }

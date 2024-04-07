@@ -5,11 +5,14 @@ import static Classes.ChoosePhotoButton.READ_PERMISSION_REQUEST_CODE;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -22,6 +25,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -45,6 +49,7 @@ import Classes.RecyclerAdapter;
 import Classes.ResponseModel;
 import Classes.ResponseModelDeserializer;
 import Classes.SpinnerHandler;
+import Classes.ThemeHelper;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -53,6 +58,7 @@ import Classes.Mode;
 
 import android.app.Dialog;
 import android.widget.ImageView;
+
 public class PictureAnalyzer extends AppCompatActivity {
     RecyclerView recyclerView;
     ChoosePhotoButton choosePhotoButton;
@@ -73,6 +79,7 @@ public class PictureAnalyzer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_analyzer);
+        ThemeHelper.setThemeColor(findViewById(R.id.colorBtn), getSharedPreferences("MODE", Context.MODE_PRIVATE));
 
         uri = getIntent().getParcelableArrayListExtra("uris");
 
@@ -86,7 +93,6 @@ public class PictureAnalyzer extends AppCompatActivity {
 
         Button choosePicBtn = findViewById(R.id.choosePicBtn);
         choosePhotoButton = new ChoosePhotoButton(this, choosePicBtn, uri);
-        choosePhotoButton.setBackgroundResource(R.drawable.secondary_button);
 
         getDataBtn = findViewById(R.id.getDataBtn);
         getDataBtn.setOnClickListener(getDataOnClick);
@@ -170,6 +176,7 @@ public class PictureAnalyzer extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        uri.clear();
         if (requestCode == 1 && resultCode == Activity.RESULT_OK){
             if(data.getClipData() != null) {
                 int x = data.getClipData().getItemCount();
