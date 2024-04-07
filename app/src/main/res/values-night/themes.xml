@@ -4,6 +4,7 @@
         <item name="start_color">@color/start_color_dark</item>
         <item name="center_color">@color/center_color_dark</item>
         <item name="end_color">@color/end_color_dark</item>
+        <item name="primary_color">@color/end_color_dark</item>
     </style>
 
     <style name="ScreenBackground"><item name="android:background">#20212A</item></style>
@@ -12,5 +13,8 @@
     <style name="IconColor">
         <item name="android:tint">#F2F3FF</item>
         <item name="android:background">#20212A</item>
+    </style>
+    <style name="CloseIconColor">
+        <item name="android:tint">#F2F3FF</item>
     </style>
 </resources>
