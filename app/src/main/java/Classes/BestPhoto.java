@@ -65,7 +65,7 @@ public class BestPhoto implements Mode {
             }
             if(pointsArray[i] < 0)
             {
-                pointsArray[i] = 0;
+                pointsArray[i] = 0.1f;
             }
         }
         return pointsArray;

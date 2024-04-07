@@ -76,7 +76,6 @@ public class PictureAnalyzer extends AppCompatActivity {
     public Mode calculationMode;
     ProgressDialog progressDialog;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,8 +120,7 @@ public class PictureAnalyzer extends AppCompatActivity {
     }
 
     private void showHelpDialog() {
-
-/*        // Create dialog
+        // Create dialog
         final Dialog helpDialog = new Dialog(this);
         helpDialog.setContentView(R.layout.help_layout);
         helpDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -140,7 +138,7 @@ public class PictureAnalyzer extends AppCompatActivity {
         });
 
         // Show dialog
-        helpDialog.show();*/
+        helpDialog.show();
     }
 
     public void showToast(String message){
@@ -211,13 +209,11 @@ public class PictureAnalyzer extends AppCompatActivity {
                     showToast("Please turn on your internet");
                 }
                 else{
-                    for(Uri imageUri : uri){
-                        resultList.clear();
-                        analyzedImages.clear();
+                    resultList.clear();
+                    analyzedImages.clear();
 
-                        progressDialog = ProgressDialog.show(PictureAnalyzer.this, "Loading", "Analyzing your images...", true);
-                        makeSequentialRequests(uri, 0);
-                    }
+                    progressDialog = ProgressDialog.show(PictureAnalyzer.this, "Loading", "Analyzing your images...", true);
+                    makeSequentialRequests(uri, 0);
                 }
             }
             else {
@@ -246,7 +242,8 @@ public class PictureAnalyzer extends AppCompatActivity {
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     if (!response.isSuccessful()) {
-                        throw new IOException("Unexpected code " + response);
+                        //throw new IOException("Unexpected code " + response);
+                        return;
                     }
 
                     String responseData = response.body().string();

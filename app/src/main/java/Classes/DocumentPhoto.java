@@ -56,6 +56,16 @@ public class DocumentPhoto implements Mode{
                     (1 / responseModel.faces.get(i).attributes.headPose.rollAngle);
 
             pointsArray[i] = points;
+
+            //Fail safes
+            if(pointsArray[i] > 5)
+            {
+                pointsArray[i] = 5;
+            }
+            if(pointsArray[i] < 0)
+            {
+                pointsArray[i] = 0.1f;
+            }
         }
         return pointsArray;
     }
