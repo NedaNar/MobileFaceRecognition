@@ -33,15 +33,56 @@ android:background="@drawable/background_help"> <!-- Set dialog_background.xml a
         android:layout_marginTop="25dp"
         android:layout_marginBottom="16dp">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus justo neque, sollicitudin et purus pulvinar, congue imperdiet urna. Suspendisse interdum iaculis felis in consequat. Phasellus posuere felis dui, nec placerat quam efficitur nec. Suspendisse ultrices auctor sapien nec fermentum. Suspendisse sollicitudin urna orci, ultricies maximus orci elementum a. Vivamus semper imperdiet venenatis. Sed eu purus eu ipsum venenatis malesuada. Aenean lacus felis, convallis et odio quis, finibus sodales velit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus justo neque, sollicitudin et purus pulvinar, congue imperdiet urna. Suspendisse interdum iaculis felis in consequat. Phasellus posuere felis dui, nec placerat quam efficitur nec. Suspendisse ultrices auctor sapien nec fermentum. Suspendisse sollicitudin urna orci, ultricies maximus orci elementum a. Vivamus semper imperdiet venenatis. Sed eu purus eu ipsum venenatis malesuada. Aenean lacus felis, convallis et odio quis, finibus sodales velit."
-            android:textColor="#000"
-            android:textSize="16sp"
-            android:padding="16dp"/>
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How to use the app?"
+                android:textColor="#000"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:padding="16dp"/>
+
+            <TextView
+                android:id="@+id/firstText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aenean lacus felis, convallis et odio quis, finibus sodales velit."
+                android:textColor="#000"
+                android:textSize="14sp" />
+
+            <View
+                android:id="@+id/separator"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@drawable/separator"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How are the points calculated?"
+                android:textColor="#000"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:padding="16dp"/>
+
+            <TextView
+                android:id="@+id/secondText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aenean lacus felis, convallis et odio quis, finibus sodales velit."
+                android:textColor="#000"
+                android:textSize="14sp" />
+
+        </LinearLayout>
     </ScrollView>
+
 
 </RelativeLayout>
 
