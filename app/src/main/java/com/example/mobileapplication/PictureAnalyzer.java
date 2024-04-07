@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import Classes.ApiManager;
+import Classes.BestPhoto;
 import Classes.ImageModel;
 import Classes.RecyclerAdapter;
 import Classes.ResponseModel;
@@ -48,12 +49,9 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 import Classes.ChoosePhotoButton;
-import Classes.PointCalculator;
 import Classes.Mode;
-import Classes.DocumentPhoto;
-import Classes.BestPhoto;
+
 import android.app.Dialog;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 public class PictureAnalyzer extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -68,6 +66,8 @@ public class PictureAnalyzer extends AppCompatActivity {
     private static final int Network_Permission = 102;
     public float[] points;
     SpinnerHandler spinnerHandler;
+
+    public Mode calculationMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,7 +170,6 @@ public class PictureAnalyzer extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        uri.clear();
         if (requestCode == 1 && resultCode == Activity.RESULT_OK){
             if(data.getClipData() != null) {
                 int x = data.getClipData().getItemCount();
@@ -204,6 +203,8 @@ public class PictureAnalyzer extends AppCompatActivity {
                 }
                 else{
                     for(Uri imageUri : uri){
+                        resultList.clear();
+                        analyzedImages.clear();
                         makeSequentialRequests(uri, 0);
                     }
                 }
@@ -249,8 +250,32 @@ public class PictureAnalyzer extends AppCompatActivity {
 
                         if (points == null)
                             analyzedImages.add(new ImageModel(uriList.get(index), -1, "No faces detected","", 0));
-                        else if (points.length > 1)
-                            analyzedImages.add(new ImageModel(uriList.get(index), 0, "Select \"Group Photo\" to analyze", "", 0));
+                        else if (points.length > 1 && !spinnerHandler.mode.equals("Best group photo"))
+                            analyzedImages.add(new ImageModel(uriList.get(index), 0, "Select \"Best group photo\" to analyze", "", 0));
+                        else if (points.length > 1 && spinnerHandler.mode.equals("Best group photo"))
+                        {
+                            float pointsInterim = 0;
+                            String genders = "";
+                            float ageInterim = 0;
+                            for (int i = 0; i < points.length; i ++)
+                            {
+                                pointsInterim = points[i];
+                                genders += " " + responseModel.faces.get(i).attributes.gender;
+                                ageInterim += responseModel.faces.get(i).attributes.age;
+                            }
+                            if (points.length > 2)
+                            {
+                                genders = "Multiple";
+                            }
+                            pointsInterim /= points.length;
+                            ageInterim /= points.length;
+
+                            analyzedImages.add(new ImageModel(uriList.get(index), pointsInterim, "",
+                                    genders, (int) ageInterim));
+                        }
+
+                        else if (points.length == 1 && !spinnerHandler.mode.equals("Best photo"))
+                            analyzedImages.add(new ImageModel(uriList.get(index), 0, "Select \"Best photo\" to analyze", "", 0));
                         else
                             analyzedImages.add(new ImageModel(uriList.get(index), points[0], "",
                                     responseModel.faces.get(0).attributes.gender.toString(),
@@ -282,6 +307,7 @@ public class PictureAnalyzer extends AppCompatActivity {
     }
 
     private float[] CalculatePoints(ResponseModel responseModel) {
-        return PointCalculator.CalculatePoints(responseModel);
+        calculationMode = spinnerHandler.calculationMode;
+        return calculationMode.PointCalculator(responseModel);
     }
 }

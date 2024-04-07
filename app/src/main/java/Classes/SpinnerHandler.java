@@ -7,6 +7,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.example.mobileapplication.PictureAnalyzer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +16,8 @@ public class SpinnerHandler {
     private static final String MODE_KEY = "mode";
     private Context mContext;
     private Spinner mSpinner;
-    private String mode = "Best photo";
-
+    public String mode = "Best photo";
+    public Mode calculationMode = new BestPhoto();
     public SpinnerHandler(Context context, Spinner spinner) {
         mContext = context;
         mSpinner = spinner;
@@ -40,6 +42,11 @@ public class SpinnerHandler {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 mode = parentView.getItemAtPosition(position).toString();
+                if(mode.equals("Best photo") || mode.equals("Best group photo"))
+                {
+                    calculationMode = new BestPhoto();
+                }
+                else calculationMode = new DocumentPhoto();
                 saveModeToPreferences(); // Save mode to SharedPreferences
             }
 
