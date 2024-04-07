@@ -25,7 +25,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="16dp">
             <ImageButton
-                android:id="@+id/lightBtn"
+                android:id="@+id/colorBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:src="@drawable/light_icon"

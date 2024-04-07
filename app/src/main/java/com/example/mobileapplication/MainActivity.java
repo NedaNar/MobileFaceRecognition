@@ -9,10 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -35,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
         Spinner photoTypeSpinner = findViewById(R.id.photo_type_spinner);
         spinnerHandler = new SpinnerHandler(this, photoTypeSpinner);
+
+        TextView modeTextView = findViewById(R.id.app_name);
+        modeTextView.setTextColor(Color.parseColor("#B5FFD2"));
     }
 
     @Override

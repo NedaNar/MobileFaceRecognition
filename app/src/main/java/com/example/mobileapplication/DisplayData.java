@@ -1,6 +1,7 @@
 package com.example.mobileapplication;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import Classes.ImageModel;
 import Classes.RecyclerAdapterList;
 import Classes.RecyclerViewItemDecoration;
+import Classes.ThemeHelper;
 
 public class DisplayData extends AppCompatActivity {
 
@@ -32,6 +34,7 @@ public class DisplayData extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_data);
+        ThemeHelper.setThemeColor(findViewById(R.id.colorBtn), getSharedPreferences("MODE", Context.MODE_PRIVATE));
 
         //  Retrieve image URIs from intent
         images = getIntent().<ImageModel>getParcelableArrayListExtra("images");
