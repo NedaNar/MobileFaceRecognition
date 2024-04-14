@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import Classes.ImageModel;
 import Classes.RecyclerAdapterList;
 import Classes.RecyclerViewItemDecoration;
 import Classes.ThemeHelper;
+import Classes.ToolbarHandler;
 
 public class DisplayData extends AppCompatActivity {
 
@@ -33,7 +35,6 @@ public class DisplayData extends AppCompatActivity {
     private ArrayList<ImageModel> images;
     private String mode;
 
-    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,19 +48,23 @@ public class DisplayData extends AppCompatActivity {
         //  Initialize recycler view of all images
         imagesView = findViewById(R.id.recyclerViewImages);
         imagesView.setLayoutManager(new LinearLayoutManager(this));
-        imagesAdapter = new RecyclerAdapterList(images, "recyclerViewImages");
+        imagesAdapter = new RecyclerAdapterList(images, "recyclerViewImages", mode);
         imagesView.setAdapter(imagesAdapter);
         RecyclerViewItemDecoration dividerItemDecoration = new RecyclerViewItemDecoration(this, R.drawable.separator);
         imagesView.addItemDecoration(dividerItemDecoration);
 
-        //  Initialize recycler view of best image
-        bestView = findViewById(R.id.recyclerViewBestImage);
-        bestView.setLayoutManager(new LinearLayoutManager(this));
-        bestAdapter = new RecyclerAdapterList(images, "recyclerViewBestImage");
-        bestView.setAdapter(bestAdapter);
+        if (!mode.equals("History")){
+            bestView = findViewById(R.id.recyclerViewBestImage);
+            bestView.setLayoutManager(new LinearLayoutManager(this));
+            bestAdapter = new RecyclerAdapterList(images, "recyclerViewBestImage", mode);
+            bestView.setAdapter(bestAdapter);
+        }
 
         TextView modeTextView = findViewById(R.id.textViewTitle);
         modeTextView.setText(mode.toUpperCase());
+
+        TextView resultsTextView = findViewById(R.id.resultsTitle);
+        if (mode.equals("History")) resultsTextView.setVisibility(View.GONE);
 
         backButton = findViewById(R.id.backBtn);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -71,15 +76,9 @@ public class DisplayData extends AppCompatActivity {
             }
         });
 
-        // Find HelpBtn and set OnClickListener
         ImageButton helpBtn = findViewById(R.id.helpBtn);
-        helpBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Show help dialog
-                showHelpDialog();
-            }
-        });
+        Button historyBtn = findViewById(R.id.historyBtn);
+        ToolbarHandler toolbarHandler = new ToolbarHandler(this, helpBtn, historyBtn);
     }
 
     private void showHelpDialog() {

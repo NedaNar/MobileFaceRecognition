@@ -24,10 +24,13 @@
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="16dp">
+
             <ImageButton
                 android:id="@+id/colorBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
                 android:src="@drawable/light_icon"
                 android:background="@null"
                 android:layout_marginEnd="16dp"/>
@@ -36,8 +39,25 @@
                 android:id="@+id/helpBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
                 android:src="@drawable/help_icon"
                 android:background="@null" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/historyBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="History"
+                style="@style/TitleSecondary"
+                android:textStyle="bold"
+                android:textSize="14dp"
+                android:layout_marginLeft="8dp"
+                android:paddingStart="12dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
+                android:background="@null"/>
         </LinearLayout>
     </RelativeLayout>
 </androidx.appcompat.widget.Toolbar>

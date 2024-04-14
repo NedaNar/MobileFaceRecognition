@@ -11,8 +11,10 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
         android:layout_marginEnd="12dp"
         android:scaleType="centerCrop" />
 
@@ -63,5 +65,26 @@
             android:layout_marginTop="8dp"
             android:textColor="#4F55CF"
             android:background="@null" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+            <ImageButton
+                android:id="@+id/instaBtn"
+                android:background="@null"
+                android:src="@drawable/instagram"
+                android:scaleType="fitCenter"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="16dp"/>
+            <ImageButton
+                android:id="@+id/fbBtn"
+                android:background="@null"
+                android:src="@drawable/facebook"
+                android:scaleType="fitCenter"
+                android:layout_width="32dp"
+                android:layout_height="32dp"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 
 public class ImageModel implements Parcelable {
 
-    public ImageModel(Uri imageUri, float points, String message, String gender, int age) {
+    public ImageModel(String imageUri, float points, String message, String gender, int age) {
         ImageUri = imageUri;
         Points = points;
         Message = message;
@@ -16,14 +16,14 @@ public class ImageModel implements Parcelable {
         Age = age;
     }
 
-    public Uri ImageUri;
+    public String ImageUri;
     public float Points;
     public String Gender;
     public int Age;
     public String Message;
 
     protected ImageModel(Parcel in) {
-        ImageUri = in.readParcelable(Uri.class.getClassLoader());
+        ImageUri = in.readString();
         Points = in.readFloat();
         Message = in.readString();
         Gender = in.readString();
@@ -49,7 +49,7 @@ public class ImageModel implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeParcelable(ImageUri, flags);
+        dest.writeString(ImageUri);
         dest.writeFloat(Points);
         dest.writeString(Message);
         dest.writeString(Gender);

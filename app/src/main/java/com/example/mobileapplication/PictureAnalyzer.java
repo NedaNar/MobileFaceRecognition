@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.Manifest;
@@ -43,13 +41,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import Classes.ApiManager;
-import Classes.BestPhoto;
+import Classes.HistoryHelper;
 import Classes.ImageModel;
 import Classes.RecyclerAdapter;
 import Classes.ResponseModel;
 import Classes.ResponseModelDeserializer;
 import Classes.SpinnerHandler;
 import Classes.ThemeHelper;
+import Classes.ToolbarHandler;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -101,44 +100,16 @@ public class PictureAnalyzer extends AppCompatActivity {
         bottomLayout = findViewById(R.id.bottomLayout);
         selectedPhotosTextView = findViewById(R.id.selected_photos);
 
-
-        // Find HelpBtn and set OnClickListener
         ImageButton helpBtn = findViewById(R.id.helpBtn);
-        helpBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Show help dialog
-                showHelpDialog();
-            }
-        });
+        Button historyBtn = findViewById(R.id.historyBtn);
+        ToolbarHandler toolbarHandler = new ToolbarHandler(this, helpBtn, historyBtn);
+
         if (uri.isEmpty()) {
             bottomLayout.setVisibility(View.GONE);
             selectedPhotosTextView.setVisibility(View.GONE);
         }
 
         CheckPermissions();
-    }
-
-    private void showHelpDialog() {
-        // Create dialog
-        final Dialog helpDialog = new Dialog(this);
-        helpDialog.setContentView(R.layout.help_layout);
-        helpDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        helpDialog.setCancelable(true);
-
-        // Find "Close" button in dialog layout
-        ImageView btnClose = helpDialog.findViewById(R.id.closeButton);
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Close the dialog
-                helpDialog.dismiss();
-            }
-        });
-
-        // Show dialog
-        helpDialog.show();
     }
 
     public void showToast(String message){
@@ -257,9 +228,9 @@ public class PictureAnalyzer extends AppCompatActivity {
                         points = CalculatePoints(responseModel);
 
                         if (points == null)
-                            analyzedImages.add(new ImageModel(uriList.get(index), -1, "No faces detected","", 0));
+                            analyzedImages.add(new ImageModel(uriList.get(index).toString(), -1, "No faces detected","", 0));
                         else if (points.length > 1 && !spinnerHandler.mode.equals("Best group photo"))
-                            analyzedImages.add(new ImageModel(uriList.get(index), 0, "Select \"Best group photo\" to analyze", "", 0));
+                            analyzedImages.add(new ImageModel(uriList.get(index).toString(), 0, "Select \"Best group photo\" to analyze", "", 0));
                         else if (points.length > 1 && spinnerHandler.mode.equals("Best group photo"))
                         {
                             float pointsInterim = 0;
@@ -278,14 +249,15 @@ public class PictureAnalyzer extends AppCompatActivity {
                             pointsInterim /= points.length;
                             ageInterim /= points.length;
 
-                            analyzedImages.add(new ImageModel(uriList.get(index), pointsInterim, "",
+                            analyzedImages.add(new ImageModel(uriList.get(index).toString(), pointsInterim, "",
                                     genders, (int) ageInterim));
                         }
 
-                        else if (points.length == 1 && !spinnerHandler.mode.equals("Best photo"))
-                            analyzedImages.add(new ImageModel(uriList.get(index), 0, "Select \"Best photo\" to analyze", "", 0));
+                        else if (points.length == 1 && !spinnerHandler.mode.equals("Best photo")
+                                && !spinnerHandler.mode.equals("Best document photo"))
+                            analyzedImages.add(new ImageModel(uriList.get(index).toString(), 0, "Select \"Best photo\" to analyze", "", 0));
                         else
-                            analyzedImages.add(new ImageModel(uriList.get(index), points[0], "",
+                            analyzedImages.add(new ImageModel(uriList.get(index).toString(), points[0], "",
                                     responseModel.faces.get(0).attributes.gender.toString(),
                                     responseModel.faces.get(0).attributes.age));
                     } catch (Exception e) {
@@ -302,6 +274,7 @@ public class PictureAnalyzer extends AppCompatActivity {
             Intent intent = new Intent(PictureAnalyzer.this, DisplayData.class);
             intent.putExtra("mode", spinnerHandler.getMode());
             intent.putParcelableArrayListExtra("images", (ArrayList<? extends Parcelable>) analyzedImages);
+            HistoryHelper.saveAnalyzedImages(this, analyzedImages);
             startActivity(intent);
         }
     }

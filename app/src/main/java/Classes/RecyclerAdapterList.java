@@ -3,6 +3,7 @@ package Classes;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -15,13 +16,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.mobileapplication.R;
 
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterLis
     private ArrayList<ImageModel> images;
     private String recyclerViewId;
 
-    public RecyclerAdapterList(ArrayList<ImageModel> images, String recyclerViewId) {
+    public RecyclerAdapterList(ArrayList<ImageModel> images, String recyclerViewId, String mode) {
         ArrayList<ImageModel> updatedImages = new ArrayList<>();
 
         this.recyclerViewId = recyclerViewId;
@@ -43,7 +45,10 @@ public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterLis
             }
         });
 
-        if (recyclerViewId.equals("recyclerViewBestImage")) {
+        if (mode.equals("History")){
+            updatedImages.addAll(images);
+        }
+        else if (recyclerViewId.equals("recyclerViewBestImage")) {
             if (!images.isEmpty()) {
                 updatedImages.add(images.get(0));
             }
@@ -75,9 +80,9 @@ public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterLis
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapterList.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.imageView.setImageURI(images.get(position).ImageUri);
-
-        SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
+        Glide.with(holder.itemView.getContext())
+                .load(images.get(position).ImageUri)
+                .into(holder.imageView);
 
         String pointsText = "";
         if (images.get(position).Points != 0 && images.get(position).Points != -1) {
@@ -110,7 +115,20 @@ public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterLis
         holder.moreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCustomDialog(v.getContext(), finalPointsText, images.get(position).ImageUri);
+                showCustomDialog(v.getContext(), finalPointsText, Uri.parse(images.get(position).ImageUri));
+            }
+        });
+
+        holder.instagramButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openInstagram(v.getContext(), Uri.parse(images.get(position).ImageUri));
+            }
+        });
+        holder.facebookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFacebook(v.getContext(), Uri.parse(images.get(position).ImageUri));
             }
         });
     }
@@ -127,6 +145,8 @@ public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterLis
         TextView textAge;
         TextView textMessage;
         Button moreButton;
+        ImageButton instagramButton;
+        ImageButton facebookButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -137,6 +157,8 @@ public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterLis
             textAge = itemView.findViewById(R.id.textAge);
             textMessage = itemView.findViewById(R.id.textMessage);
             moreButton = itemView.findViewById(R.id.moreButton);
+            instagramButton = itemView.findViewById(R.id.instaBtn);
+            facebookButton = itemView.findViewById(R.id.fbBtn);
         }
     }
 
@@ -171,5 +193,37 @@ public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterLis
         stringBuilder.setSpan(new StyleSpan(Typeface.BOLD), stringBuilder.length() - valueText.length(), stringBuilder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         return stringBuilder;
+    }
+
+    private void openInstagram(Context context, Uri imageUri) {
+        String instagramPackageName = "com.instagram.android";
+
+        try {
+            // Open Instagram with the photo URL
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("image/*");
+            intent.putExtra(Intent.EXTRA_STREAM, imageUri);
+            intent.setPackage(instagramPackageName);
+            context.startActivity(intent);
+        } catch (Exception e) {
+            // Instagram app not found, open Instagram website
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com")));
+        }
+    }
+
+    private void openFacebook(Context context, Uri imageUri) {
+        String facebookPackageName = "com.facebook.katana";
+
+        try {
+            // Open Facebook with the photo URL
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("image/*");
+            intent.putExtra(Intent.EXTRA_STREAM, imageUri);
+            intent.setPackage(facebookPackageName);
+            context.startActivity(intent);
+        } catch (Exception e) {
+            // Facebook app not found, open Facebook website
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com")));
+        }
     }
 }
