@@ -32,15 +32,6 @@
             android:layout_marginBottom="8dp"/>
 
         <TextView
-            android:id="@+id/groupAverageMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Group average points!"
-            android:textSize="16dp"
-            style="@style/TitleSecondary"
-            android:layout_marginBottom="8dp"/>
-
-        <TextView
             android:id="@+id/textGender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
