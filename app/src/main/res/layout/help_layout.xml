@@ -1,6 +1,6 @@
 <!-- Your dialog layout XML file -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
+    android:layout_width="320dp"
     android:layout_height="500dp"
     android:padding="16dp"
     android:background="@drawable/background_help"> <!-- Set dialog_background.xml as the background -->
@@ -50,7 +50,7 @@
             android:id="@+id/firstText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Aenean lacus felis, convallis et odio quis, finibus sodales velit."
+            android:text="1. Select the type of photos you want to analyze.\n2. Choose 'Best group photo' for images with multiple people,'Best document photo' to find the most suitable photo for documents and 'Best photo' for a general best photo of one person.\n3. Select as many photos as you would like to analyze.\n4. The results will show how much points each photo got and more information that was calculated for each photo such as gender of a person, age beauty score and more.\n5. You can share these photos on Instagram and Facebook by clicking on an icon!\n6. In 'History' page you will see all previously analyzed images."
             style="@style/TitleSecondary"
             android:textSize="14sp" />
 
@@ -59,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="1dp"
             android:background="@drawable/separator"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="18dp"
             android:layout_marginBottom="12dp"/>
 
         <TextView
@@ -75,7 +75,7 @@
             android:id="@+id/secondText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Aenean lacus felis, convallis et odio quis, finibus sodales velit."
+            android:text="The application uses the Face++ API to retrieve image information. This API provides face recognition and analysis services that allow developers to detect and analyse faces in images, as well as extract various attributes such as gender, age, emotions and beauty scores. After receiving a response from the API, the application processes JSON data containing information about the detected faces, including their attributes, and calculates scores based on this data. \n\n Finding the best photo: The best photo is calculated by taking into account factors such as eye-openness, head tilt, smile and a gender-specific beauty score, as well as the quality of the photo."
             style="@style/TitleSecondary"
             android:textSize="14sp" />
 
