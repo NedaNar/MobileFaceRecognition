@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,11 +34,11 @@ import java.util.Comparator;
 public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterList.ViewHolder> {
     private ArrayList<ImageModel> images;
     private String recyclerViewId;
-
     public RecyclerAdapterList(ArrayList<ImageModel> images, String recyclerViewId, String mode) {
         ArrayList<ImageModel> updatedImages = new ArrayList<>();
 
         this.recyclerViewId = recyclerViewId;
+
         Collections.sort(images, new Comparator<ImageModel>() {
             @Override
             public int compare(ImageModel o1, ImageModel o2) {
@@ -100,7 +101,8 @@ public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterLis
 
         if (images.get(position).Age != 0) {
             holder.textAge.setText("Age: " + images.get(position).Age);
-        } else {
+        }
+        else {
             holder.textAge.setVisibility(View.GONE);
         }
 
@@ -115,7 +117,7 @@ public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterLis
         holder.moreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCustomDialog(v.getContext(), finalPointsText, Uri.parse(images.get(position).ImageUri));
+                showCustomDialog(v.getContext(), finalPointsText, Uri.parse(images.get(position).ImageUri), position);
             }
         });
 
@@ -162,7 +164,7 @@ public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterLis
         }
     }
 
-    private void showCustomDialog(Context context, String points, Uri imageUri) {
+    private void showCustomDialog(Context context, String points, Uri imageUri, int position) {
         Dialog dialog = new Dialog(context, R.style.RoundedCornersDialog);
         dialog.setContentView(R.layout.dialog_layout);
 
@@ -170,7 +172,52 @@ public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterLis
         TextView pointsText = dialog.findViewById(R.id.dialogText);
         ImageView imageView = dialog.findViewById(R.id.dialogImage);
 
+        TextView firstText = dialog.findViewById(R.id.dialogGender);
+        TextView secondText = dialog.findViewById(R.id.dialogAge);
+        TextView smilePoints = dialog.findViewById(R.id.dialogSmile);
+        TextView beautyPoints = dialog.findViewById(R.id.dialogBeauty);
+        TextView emotionsList = dialog.findViewById(R.id.dialogEmotions);
+
         pointsText.setText(FormatText("Total points: ", points));
+        firstText.setText(FormatText("Gender: ", images.get(position).Gender));
+        secondText.setText(FormatText("Age: ", String.valueOf(images.get(position).Age)));
+
+        StringBuilder emotionsBuilder = new StringBuilder();
+        ArrayList<String> emotions = images.get(position).Emotions; // Assuming you have a list of emotions in your ImageModel
+        for (String emotion : emotions) {
+            emotionsBuilder.append(emotion).append(", ");
+        }
+        // Remove the trailing comma and space
+        if (emotionsBuilder.length() > 0) {
+            emotionsBuilder.setLength(emotionsBuilder.length() - 2);
+        }
+
+        // Set the string representation of emotions to the TextView
+        emotionsList.setText("Detected emotions: " + emotionsBuilder.toString());
+
+        if (images.get(position).Beauty <= 25){
+            beautyPoints.setText(FormatText("Beauty score: ", "low"));
+        }
+        else if (images.get(position).Beauty > 25 && images.get(position).Beauty < 60){
+            beautyPoints.setText(FormatText("Beauty score: ", "average"));
+        }
+        else{
+            beautyPoints.setText(FormatText("Beauty score: ", "high"));
+        }
+
+        if (images.get(position).Smile <= 2){
+            smilePoints.setText(FormatText("Smile: ", "no smile"));
+        }
+        else if (images.get(position).Smile > 2 && images.get(position).Smile < 50){
+            smilePoints.setText(FormatText("Smile: ", "small smile"));
+        }
+        else if (images.get(position).Smile >= 50 && images.get(position).Smile < 90){
+            smilePoints.setText(FormatText("Smile: ", "average smile"));
+        }
+        else if (images.get(position).Smile >= 90){
+            smilePoints.setText(FormatText("Smile: ", "big smile"));
+        }
+
         imageView.setImageURI(imageUri);
 
         closeButton.setOnClickListener(new View.OnClickListener() {
@@ -181,6 +228,7 @@ public class RecyclerAdapterList extends RecyclerView.Adapter<RecyclerAdapterLis
         });
         dialog.show();
     }
+
 
     private SpannableStringBuilder FormatText(String labelText, String valueText) {
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder();

@@ -44,10 +44,21 @@
         android:layout_marginBottom="12dp"/>
 
     <TextView
-        android:id="@+id/dialogGender"
+        android:id="@+id/dialogMore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/separator"
+        android:text="More results: "
+        style="@style/TitleSecondary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/dialogGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialogMore"
         android:text="First Additional Text"
         style="@style/TitleSecondary"
         android:textSize="14sp" />
@@ -57,6 +68,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/dialogGender"
+        android:text="Second Additional Text"
+        style="@style/TitleSecondary"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/dialogSmile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialogAge"
+        android:text="Second Additional Text"
+        style="@style/TitleSecondary"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/dialogBeauty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialogSmile"
+        android:text="Second Additional Text"
+        style="@style/TitleSecondary"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/dialogEmotions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialogBeauty"
         android:text="Second Additional Text"
         style="@style/TitleSecondary"
         android:textSize="14sp"

@@ -63,6 +63,12 @@ public class DisplayData extends AppCompatActivity {
         TextView modeTextView = findViewById(R.id.textViewTitle);
         modeTextView.setText(mode.toUpperCase());
 
+        if (mode.equals("Best group photo")) {
+            TextView groupMessage = findViewById(R.id.groupMessage);
+            groupMessage.setVisibility(View.VISIBLE); // to hide the TextView
+            groupMessage.setText("Given results are the averege for the group!");
+        }
+
         TextView resultsTextView = findViewById(R.id.resultsTitle);
         if (mode.equals("History")) resultsTextView.setVisibility(View.GONE);
 

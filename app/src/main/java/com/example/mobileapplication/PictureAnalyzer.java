@@ -39,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import Classes.ApiManager;
 import Classes.HistoryHelper;
@@ -228,19 +229,46 @@ public class PictureAnalyzer extends AppCompatActivity {
                         points = CalculatePoints(responseModel);
 
                         if (points == null)
-                            analyzedImages.add(new ImageModel(uriList.get(index).toString(), -1, "No faces detected","", 0));
+                            analyzedImages.add(new ImageModel(uriList.get(index).toString(), -1, "No faces detected","", 0, 0.0, 0.0, 0.0, 0.0, 0.0, new ArrayList<String>()));
                         else if (points.length > 1 && !spinnerHandler.mode.equals("Best group photo"))
-                            analyzedImages.add(new ImageModel(uriList.get(index).toString(), 0, "Select \"Best group photo\" to analyze", "", 0));
+                            analyzedImages.add(new ImageModel(uriList.get(index).toString(), 0, "Select \"Best group photo\" to analyze", "", 0, 0.0, 0.0, 0.0, 0.0, 0.0, new ArrayList<String>()));
                         else if (points.length > 1 && spinnerHandler.mode.equals("Best group photo"))
                         {
                             float pointsInterim = 0;
                             String genders = "";
                             float ageInterim = 0;
+                            float blurs = 0;
+                            float smiles = 0;
+                            float beauty = 0;
+                            float happiness = 0;
+                            float sadness = 0;
+                            float anger = 0;
+                            float disgust = 0;
+                            float fear = 0;
+                            float neutral = 0;
+                            float surprise = 0;
+                            ArrayList<String> emotions = new ArrayList<String>();
+
                             for (int i = 0; i < points.length; i ++)
                             {
                                 pointsInterim = points[i];
                                 genders += " " + responseModel.faces.get(i).attributes.gender;
                                 ageInterim += responseModel.faces.get(i).attributes.age;
+                                blurs += responseModel.faces.get(i).attributes.blur;
+                                smiles += responseModel.faces.get(i).attributes.smile;
+                                happiness += responseModel.faces.get(i).attributes.emotion.happiness;
+                                sadness += responseModel.faces.get(i).attributes.emotion.sadness;
+                                anger += responseModel.faces.get(i).attributes.emotion.anger;
+                                disgust += responseModel.faces.get(i).attributes.emotion.disgust;
+                                fear += responseModel.faces.get(i).attributes.emotion.fear;
+                                neutral += responseModel.faces.get(i).attributes.emotion.neutral;
+                                surprise += responseModel.faces.get(i).attributes.emotion.surprise;
+
+                                if (Objects.equals(responseModel.faces.get(i).attributes.gender, "female")){
+                                    beauty += responseModel.faces.get(i).attributes.beauty.femaleScore;
+                                }
+                                else{
+                                    beauty += responseModel.faces.get(i).attributes.beauty.maleScore;
                             }
                             if (points.length > 2)
                             {
@@ -248,18 +276,80 @@ public class PictureAnalyzer extends AppCompatActivity {
                             }
                             pointsInterim /= points.length;
                             ageInterim /= points.length;
+                            blurs /= points.length;
+                            smiles /= points.length;
+                            beauty /= points.length;
+                            happiness /= points.length;
+                            sadness /= points.length;
+                            anger /= points.length;
+                            disgust /= points.length;
+                            fear /= points.length;
+                            neutral /= points.length;
+                            surprise /= points.length;
 
-                            analyzedImages.add(new ImageModel(uriList.get(index).toString(), pointsInterim, "",
-                                    genders, (int) ageInterim));
+                                if (happiness >= 10 && !emotions.contains("Happiness")) {
+                                    emotions.add("Happiness");
+                                }
+                                if (sadness >= 10 && !emotions.contains("Sadness")) {
+                                    emotions.add("Sadness");
+                                }
+                                if (anger >= 10 && !emotions.contains("Anger")) {
+                                    emotions.add("Anger");
+                                }
+                                if (disgust >= 10 && !emotions.contains("Disgust")) {
+                                    emotions.add("Disgust");
+                                }
+                                if (fear >= 10 && !emotions.contains("Fear")) {
+                                    emotions.add("Fear");
+                                }
+                                if (neutral >= 10 && !emotions.contains("Neutral")) {
+                                    emotions.add("Neutral");
+                                }
+                                if (surprise >= 10 && !emotions.contains("Surprise")) {
+                                    emotions.add("Surprise");
+                                }
+
                         }
-
+                            analyzedImages.add(new ImageModel(uriList.get(index).toString(), pointsInterim, "",
+                                    genders, (int) ageInterim, blurs, smiles, beauty, happiness, sadness, emotions));
+                            }
                         else if (points.length == 1 && !spinnerHandler.mode.equals("Best photo")
                                 && !spinnerHandler.mode.equals("Best document photo"))
-                            analyzedImages.add(new ImageModel(uriList.get(index).toString(), 0, "Select \"Best photo\" to analyze", "", 0));
-                        else
+                            analyzedImages.add(new ImageModel(uriList.get(index).toString(), 0, "Select \"Best photo\" to analyze", "", 0, 0.0, 0.0, 0.0, 0.0, 0.0, new ArrayList<String>()));
+                        else{
+                            ArrayList<String> emotions = new ArrayList<String>();
+                            String genderr = "";
+                            if (Objects.equals(responseModel.faces.get(0).attributes.gender, "Female")){
+                                genderr = "female";
+                            }
+                            else genderr = "male";
+
+                            if (responseModel.faces.get(0).attributes.emotion.happiness >= 10) {
+                                emotions.add("Happiness");}
+                            if (responseModel.faces.get(0).attributes.emotion.sadness >= 10) {
+                                emotions.add("Sadness");}
+                            if (responseModel.faces.get(0).attributes.emotion.anger >= 10) {
+                                emotions.add("Anger");}
+                            if (responseModel.faces.get(0).attributes.emotion.disgust >= 10) {
+                                emotions.add("Disgust");}
+                            if (responseModel.faces.get(0).attributes.emotion.fear >= 10) {
+                                emotions.add("Fear");}
+                            if (responseModel.faces.get(0).attributes.emotion.neutral >= 10) {
+                                emotions.add("Neutral");}
+                            if (responseModel.faces.get(0).attributes.emotion.surprise >= 10) {
+                                emotions.add("Surprise");}
+
                             analyzedImages.add(new ImageModel(uriList.get(index).toString(), points[0], "",
-                                    responseModel.faces.get(0).attributes.gender.toString(),
-                                    responseModel.faces.get(0).attributes.age));
+                                    genderr,
+                                    responseModel.faces.get(0).attributes.age,
+                                    responseModel.faces.get(0).attributes.blur,
+                                    responseModel.faces.get(0).attributes.smile,
+                                    responseModel.faces.get(0).attributes.beauty.femaleScore,
+                                    responseModel.faces.get(0).attributes.emotion.happiness,
+                                    responseModel.faces.get(0).attributes.emotion.sadness,
+                                    emotions));
+                        }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
